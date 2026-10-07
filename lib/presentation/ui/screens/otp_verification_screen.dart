@@ -1,6 +1,7 @@
 import 'package:crafty_bay/presentation/ui/screens/complete_profile_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
 import 'package:crafty_bay/presentation/ui/widgets/app_logo_widget.dart';
+import 'package:crafty_bay/presentation/widgets/otp_time_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -14,6 +15,11 @@ class OtpVerificationScreen extends StatefulWidget {
 
 class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final TextEditingController _otpTEController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+    Get.put(OtpTimeController());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,23 +65,41 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 appContext: context,
               ),
               const SizedBox(height: 24),
-              ElevatedButton(onPressed: _onTapNextButton, child: const Text('Next')),
-              const SizedBox(height: 16),
-              RichText(
-                text: TextSpan(
-                  style: Theme.of(context).textTheme.bodyLarge
-                      ?.copyWith(color: Colors.grey),
-                  text: 'This code will expire in ',
-                  children: const [
-                    TextSpan(
-                      text: '120s',
-                      style: TextStyle(color: AppColors.themeColor),
-                    ),
-                  ],
-                ),
+              ElevatedButton(
+                onPressed: _onTapNextButton,
+                child: const Text('Next'),
               ),
               const SizedBox(height: 16),
-              TextButton(onPressed: (){}, child: const Text('Resend code'),),
+              GetBuilder<OtpTimeController>(
+                builder: (controller) {
+                  return Column(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(color: Colors.grey),
+                          text: 'This code will expire in ',
+                          children: [
+                            TextSpan(
+                              text: '${controller.remainingTime}s',
+                              style: const TextStyle(color: AppColors.themeColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: controller.canResend
+                            ? () {
+                          controller.startTimer();
+                        }
+                            : null,
+                        child: const Text('Resend code'),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -83,13 +107,14 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     );
   }
 
-  void _onTapNextButton(){
-    Get.to(()=> const CompleteProfileScreen());
+  void _onTapNextButton() {
+    Get.to(() => const CompleteProfileScreen());
   }
 
   @override
   void dispose() {
     _otpTEController.dispose();
+    Get.delete<OtpTimeController>();
     super.dispose();
   }
 }
