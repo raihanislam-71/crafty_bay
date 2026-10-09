@@ -1,4 +1,4 @@
-import 'package:crafty_bay/presentation/ui/screens/email_verification_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Future<void> _moveToNextScreen() async {
     await Future.delayed(const Duration(seconds: 2));
-    Get.off(() => const EmailVerificationScreen());
+    Get.off(() => const MainBottomNavScreen());
   }
 
   @override
@@ -25,19 +25,19 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
+              Spacer(),
               AppLogoWidget(),
-              const Spacer(),
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              const Text('Version 1.0.0', style: TextStyle(color: Colors.grey)),
+              Spacer(),
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Version 1.0.0', style: TextStyle(color: Colors.grey)),
             ],
           ),
         ),

@@ -1,10 +1,11 @@
+import 'package:crafty_bay/presentation/state_holders/bottom_nav_bar_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/category_list_screens.dart';
 import 'package:crafty_bay/presentation/ui/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import '../widgets/widgets.dart';
 
+import '../widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,7 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildPopularProductSection() {
     return Column(
       children: [
@@ -73,9 +73,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCategoriesSection() {
     return Column(
       children: [
-        SectionHeader(title: 'Categories', onTap: (){
-          Get.to(() => const CategoryListScreens() );
-        }),
+        SectionHeader(
+          title: 'Categories',
+          onTap: () {
+            Get.find<BottomNavBarController>().selectCategory();
+          },
+        ),
         const SizedBox(height: 8),
         const SizedBox(height: 120, child: HorizontalCategoriesListView()),
       ],
