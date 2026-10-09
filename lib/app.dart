@@ -1,4 +1,4 @@
-import 'package:crafty_bay/presentation/ui/screens/splash_screen.dart';
+import 'package:crafty_bay/presentation/ui/screens/home_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -9,7 +9,8 @@ class CraftyBayApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: const SplashScreen(),
+      debugShowCheckedModeBanner: false,
+      home: const HomeScreen(),
       theme: ThemeData(
         colorSchemeSeed: AppColors.themeColor,
         scaffoldBackgroundColor: Colors.white,
@@ -29,6 +30,9 @@ class CraftyBayApp extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 8,
+          ),
+          hintStyle: const TextStyle(
+            fontWeight: FontWeight.w400,
           ),
         ),
 
@@ -51,6 +55,15 @@ class CraftyBayApp extends StatelessWidget {
             textStyle: const TextStyle(fontSize: 16),
           ),
         ),
+        
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w500,
+            color: Colors.black54,
+          ),
+        )
       ),
     );
   }
