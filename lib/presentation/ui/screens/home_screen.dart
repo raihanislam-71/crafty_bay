@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               const HomeBannerSlider(),
               const SizedBox(height: 16),
-              _buildCategoriesSection(),
+              _buildCategoriesSection(),          
               _buildPopularProductSection(),
               const SizedBox(height: 16),
               _buildNewProductSection(),
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         SectionHeader(title: 'New', onTap: () {}),
         const SizedBox(height: 180, child: HorizontalProductListView()),
       ],
-    );
+    );                                              
   }
 
   Widget _buildSpecialProductSection() {

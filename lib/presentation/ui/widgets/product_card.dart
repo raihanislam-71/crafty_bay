@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import '../utils/app_colors.dart';
 
 class ProductCard extends StatelessWidget {
-  const new({super.key});
+  const ProductCard({super.key});
 
   @override
   Widget build(BuildContext context) {
