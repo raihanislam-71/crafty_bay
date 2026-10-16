@@ -33,9 +33,7 @@ class CraftyBayApp extends StatelessWidget {
             horizontal: 16,
             vertical: 8,
           ),
-          hintStyle: const TextStyle(
-            fontWeight: FontWeight.w400,
-          ),
+          hintStyle: const TextStyle(fontWeight: FontWeight.w400),
         ),
 
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -57,7 +55,7 @@ class CraftyBayApp extends StatelessWidget {
             textStyle: const TextStyle(fontSize: 16),
           ),
         ),
-        
+
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.white,
           titleTextStyle: TextStyle(
@@ -65,7 +63,15 @@ class CraftyBayApp extends StatelessWidget {
             fontWeight: FontWeight.w500,
             color: Colors.black54,
           ),
-        )
+        ),
+
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          foregroundColor: Colors.white,
+          backgroundColor: AppColors.themeColor,
+        ),
       ),
     );
   }

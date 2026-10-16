@@ -1,9 +1,12 @@
+import 'package:crafty_bay/presentation/ui/screens/reviews_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
 import 'package:crafty_bay/presentation/ui/widgets/product_image_slider.dart';
 import 'package:crafty_bay/presentation/ui/widgets/size_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 
+import '../../state_holders/bottom_nav_bar_controller.dart';
 import '../widgets/color_picker.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
@@ -17,7 +20,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Product Details")),
+      appBar: AppBar(
+        title: const Text('Product Details'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios), onPressed: Get.back
+        ),
+      ),
       body: Column(
         children: [
           Expanded(child: _buildProductDetails()),
@@ -120,7 +128,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         const SizedBox(width: 8),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(()=> const ReviewsScreen());
+          },
           child: const Text(
             'Reviews',
             style: TextStyle(
@@ -183,5 +193,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ],
       ),
     );
+  }
+
+  void backToHome(){
+    Get.find<BottomNavBarController>().backToHome();
   }
 }
