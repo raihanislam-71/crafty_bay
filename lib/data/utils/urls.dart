@@ -5,7 +5,7 @@ class Urls {
   //Auth
   static const String dummyUrl = "$_baseUrl/login";
 
-  // Product & Category
+  // Slider & Category
   static const String sliderListUrl = "$_baseUrl/ListProductSlider";
   static const String categoryList = "$_baseUrl/CategoryList";
 

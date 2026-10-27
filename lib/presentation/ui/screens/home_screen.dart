@@ -2,6 +2,7 @@ import 'package:crafty_bay/presentation/state_holders/bottom_nav_bar_controller.
 import 'package:crafty_bay/presentation/state_holders/category_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/new_product_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/popular_product_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/slider_banner_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/special_product_list_controller.dart';
 import 'package:crafty_bay/presentation/ui/utils/assets_path.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               SearchTextField(textEditingController: TextEditingController()),
               const SizedBox(height: 16),
-              const HomeBannerSlider(),
+              GetBuilder<SliderListController>(
+                builder: (sliderListController) {
+                  return Visibility(
+                    visible: !sliderListController.inProgress,
+                      replacement: const CenteredCircularProgressIndicator(),
+                      child: HomeBannerSlider(sliderList: sliderListController.sliderList,));
+                }
+              ),
               const SizedBox(height: 16),
               _buildCategoriesSection(),
               _buildPopularProductSection(),
