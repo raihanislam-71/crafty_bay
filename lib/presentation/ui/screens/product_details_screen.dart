@@ -1,5 +1,8 @@
+import 'package:crafty_bay/data/models/product_details_model.dart';
+import 'package:crafty_bay/presentation/state_holders/product_details_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/reviews_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
+import 'package:crafty_bay/presentation/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:crafty_bay/presentation/ui/widgets/product_image_slider.dart';
 import 'package:crafty_bay/presentation/ui/widgets/size_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +10,11 @@ import 'package:get/get.dart';
 import 'package:item_count_number_button/item_count_number_button.dart';
 
 import '../../state_holders/bottom_nav_bar_controller.dart';
-import '../widgets/color_picker.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({super.key});
+  const ProductDetailsScreen({super.key, required this.productId});
+
+  final int productId;
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -18,38 +22,65 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
+  void initState() {
+    super.initState();
+    Get.find<ProductDetailsController>().getProductDetails(widget.productId);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Details'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios), onPressed: Get.back
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: Get.back,
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(child: _buildProductDetails()),
-          _buildPriceAndAddToCartSection(),
-        ],
+      body: GetBuilder<ProductDetailsController>(
+        builder: (productDetailsController) {
+          if (productDetailsController.inProgress) {
+            return const CenteredCircularProgressIndicator();
+          }
+
+          if (productDetailsController.errorMessage != null) {
+            return Center(child: Text(productDetailsController.errorMessage!));
+          }
+          return Column(
+            children: [
+              Expanded(
+                child: _buildProductDetails(productDetailsController.product!),
+              ),
+              _buildPriceAndAddToCartSection(productDetailsController.product!),
+            ],
+          );
+        },
       ),
     );
   }
 
-  Widget _buildProductDetails() {
+  Widget _buildProductDetails(ProductDetailsModel product) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          const ProductImageSlider(),
+          ProductImageSlider(
+            sliderUrls: [
+              product.img1!,
+              product.img2!,
+              product.img3!,
+              product.img4!,
+            ],
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildNameAndQuantitySection(),
+                _buildNameAndQuantitySection(product),
                 const SizedBox(height: 12),
-                _buildRatingAndReviewSection(),
+                _buildRatingAndReviewSection(product),
                 const SizedBox(height: 8),
-                ColorPicker(
+                /*ColorPicker(
                   colors: const [
                     Colors.red,
                     Colors.green,
@@ -57,14 +88,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     Colors.black,
                   ],
                   onColorSelected: (color) {},
-                ),
-                const SizedBox(height: 16),
+                ),*/
                 SizePicker(
-                  sizes: const ['S', 'M', 'L', 'XL', 'XXL'],
+                  sizes: product.color!.split(','),
                   onSizeSelected: (String selectedSize) {},
                 ),
                 const SizedBox(height: 16),
-                _buildDescriptionSection(),
+                SizePicker(
+                  sizes: product.size!.split(','),
+                  onSizeSelected: (String selectedSize) {},
+                ),
+                const SizedBox(height: 16),
+                _buildDescriptionSection(product),
               ],
             ),
           ),
@@ -73,27 +108,27 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildDescriptionSection() {
+  Widget _buildDescriptionSection(ProductDetailsModel productDetails) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Description', style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
-        const Text(
-          '''Item Count Number Button is a Flutter package that allows you to easily implement a customizable item count widget with increment and decrement buttons. This widget is particularly useful in scenarios where you need to manage the quantity of items, such as in a shopping cart or inventory management system.''',
-          style: TextStyle(color: Colors.black45),
+        Text(
+          productDetails.product?.shortDes ?? ',',
+          style: const TextStyle(color: Colors.black45),
         ),
       ],
     );
   }
 
-  Widget _buildNameAndQuantitySection() {
+  Widget _buildNameAndQuantitySection(ProductDetailsModel productDetails) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Text(
-            "Nike shoe 2024 latest model - new year special hi deal",
+            productDetails.product?.title ?? '',
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
@@ -109,17 +144,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildRatingAndReviewSection() {
+  Widget _buildRatingAndReviewSection(ProductDetailsModel productDetails) {
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        const Wrap(
+        Wrap(
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Icon(Icons.star, color: Colors.amber),
+            const Icon(Icons.star, color: Colors.amber),
             Text(
-              '4',
-              style: TextStyle(
+              '${productDetails.product?.star ?? ''}',
+              style: const TextStyle(
                 fontWeight: FontWeight.w500,
                 color: Colors.black54,
               ),
@@ -129,7 +164,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         const SizedBox(width: 8),
         TextButton(
           onPressed: () {
-            Get.to(()=> const ReviewsScreen());
+            Get.to(() => const ReviewsScreen());
           },
           child: const Text(
             'Reviews',
@@ -156,7 +191,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildPriceAndAddToCartSection() {
+  Widget _buildPriceAndAddToCartSection(ProductDetailsModel productDetails) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -169,13 +204,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Prices'),
+              const Text('Prices'),
               Text(
-                '\$100',
-                style: TextStyle(
+                '\$${productDetails.product?.price}',
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: AppColors.themeColor,
@@ -195,7 +230,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  void backToHome(){
+  void backToHome() {
     Get.find<BottomNavBarController>().backToHome();
   }
 }
