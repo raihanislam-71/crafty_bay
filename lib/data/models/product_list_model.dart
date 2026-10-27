@@ -1,3 +1,4 @@
+
 import 'package:crafty_bay/data/models/product_model.dart';
 
 class ProductListModel {
