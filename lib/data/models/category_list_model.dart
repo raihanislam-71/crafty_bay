@@ -1,5 +1,6 @@
 import 'category_model.dart';
 
+
 class CategoryListModel {
   String? msg;
   List<CategoryModel>? data;

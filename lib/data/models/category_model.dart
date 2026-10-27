@@ -1,3 +1,4 @@
+
 class CategoryModel {
   int? id;
   String? categoryName;
@@ -19,6 +20,4 @@ class CategoryModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
-
-
 }
