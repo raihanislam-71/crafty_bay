@@ -7,16 +7,16 @@ class Urls {
 
   // Product & Category
   static const String sliderListUrl = "$_baseUrl/ListProductSlider";
-  static const String categoryListUrl = "$_baseUrl/CategoryList";
+  static const String categoryList = "$_baseUrl/CategoryList";
 
   // dynamic remarks: popular, new, special
   static String productListByRemark(String remark) =>
       "$_baseUrl/ListProductByRemark/$remark";
 
-static String productListByCategory(int categoryId) =>
+  static String productListByCategory(int categoryId) =>
       "$_baseUrl/ListProductByCategory/$categoryId";
 
-static String productDetailsById(int productId) =>
+  static String productDetailsById(int productId) =>
       "$_baseUrl/ProductDetailsById/$productId";
 
 
