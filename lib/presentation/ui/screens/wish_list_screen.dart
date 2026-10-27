@@ -11,7 +11,8 @@ class WishListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (value){
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         backToHome();
       },
       child: Scaffold(
@@ -32,7 +33,7 @@ class WishListScreen extends StatelessWidget {
               mainAxisSpacing: 8,
             ),
             itemBuilder: (context, index) {
-              return const ProductCard();
+              //return const ProductCard();
             },
           ),
         ),

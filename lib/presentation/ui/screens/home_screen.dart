@@ -1,9 +1,13 @@
 import 'package:crafty_bay/presentation/state_holders/bottom_nav_bar_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/new_product_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/popular_product_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/special_product_list_controller.dart';
 import 'package:crafty_bay/presentation/ui/utils/assets_path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../widgets/centered_circular_progress_indicator.dart';
 import '../widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               const HomeBannerSlider(),
               const SizedBox(height: 16),
-              _buildCategoriesSection(),          
+              _buildCategoriesSection(),
               _buildPopularProductSection(),
               const SizedBox(height: 16),
               _buildNewProductSection(),
@@ -46,7 +50,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         SectionHeader(title: 'Popular', onTap: () {}),
-        const SizedBox(height: 180, child: HorizontalProductListView()),
+        SizedBox(
+          height: 180,
+          child: GetBuilder<PopularProductListController>(
+            builder: (popularProductListController) {
+              return Visibility(
+                visible: !popularProductListController.inProgress,
+                replacement: const CenteredCircularProgressIndicator(),
+                child: HorizontalProductListView(productList: popularProductListController.productList,),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
@@ -55,16 +70,38 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         SectionHeader(title: 'New', onTap: () {}),
-        const SizedBox(height: 180, child: HorizontalProductListView()),
+        SizedBox(
+          height: 180,
+          child: GetBuilder<NewProductListController>(
+            builder: (newProductListController) {
+              return Visibility(
+                visible: !newProductListController.inProgress,
+                replacement: const CenteredCircularProgressIndicator(),
+                child: HorizontalProductListView(productList: newProductListController.productList,),
+              );
+            },
+          ),
+        ),
       ],
-    );                                              
+    );
   }
 
   Widget _buildSpecialProductSection() {
     return Column(
       children: [
         SectionHeader(title: 'Special', onTap: () {}),
-        const SizedBox(height: 180, child: HorizontalProductListView()),
+        SizedBox(
+          height: 180,
+          child: GetBuilder<SpecialProductListController>(
+            builder: (specialProductListController) {
+              return Visibility(
+                visible: !specialProductListController.inProgress,
+                replacement: const CenteredCircularProgressIndicator(),
+                child: HorizontalProductListView(productList: specialProductListController.productList,),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
@@ -98,3 +135,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+

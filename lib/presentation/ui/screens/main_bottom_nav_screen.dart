@@ -1,4 +1,7 @@
 import 'package:crafty_bay/presentation/state_holders/bottom_nav_bar_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/new_product_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/popular_product_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/special_product_list_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/cart_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/category_list_screens.dart';
 import 'package:crafty_bay/presentation/ui/screens/home_screen.dart';
@@ -22,6 +25,14 @@ final BottomNavBarController _navBarController = Get.find<BottomNavBarController
     CartScreen(),
     WishListScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Get.find<NewProductListController>().getNewProductList();
+    Get.find<PopularProductListController>().getPopularProductList();
+    Get.find<SpecialProductListController>().getSpecialProductList();
+  }
 
   @override
   Widget build(BuildContext context) {
