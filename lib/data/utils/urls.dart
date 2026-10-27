@@ -12,4 +12,9 @@ class Urls {
   // dynamic remarks: popular, new, special
   static String productListByRemark(String remark) =>
       "$_baseUrl/ListProductByRemark/$remark";
+
+static String productListByCategory(int categoryId) =>
+      "$_baseUrl/ListProductByCategory/$categoryId";
+
+
 }
