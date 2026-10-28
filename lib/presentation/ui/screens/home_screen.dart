@@ -32,14 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               SearchTextField(textEditingController: TextEditingController()),
               const SizedBox(height: 16),
-              GetBuilder<SliderListController>(
+              /*GetBuilder<SliderListController>(
                 builder: (sliderListController) {
                   return Visibility(
                     visible: !sliderListController.inProgress,
                       replacement: const CenteredCircularProgressIndicator(),
                       child: HomeBannerSlider(sliderList: sliderListController.sliderList,));
                 }
-              ),
+              ),*/
+              HomeBannerSlider(),
               const SizedBox(height: 16),
               _buildCategoriesSection(),
               _buildPopularProductSection(),

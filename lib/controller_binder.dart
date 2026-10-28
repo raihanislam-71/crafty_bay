@@ -14,8 +14,8 @@ class ControllerBinder  extends Bindings{
   @override
   void dependencies() {
     Get.lazyPut(()=> BottomNavBarController());
-    Get.put(() => Logger());
-    Get.put(() => NetworkCaller(logger: Get.find<Logger>()));
+    Get.put(Logger());
+    Get.put(NetworkCaller(logger: Get.find<Logger>()));
     Get.lazyPut(() => SliderListController());
     Get.lazyPut(() => CategoryListController());
     Get.lazyPut(() => NewProductListController());
