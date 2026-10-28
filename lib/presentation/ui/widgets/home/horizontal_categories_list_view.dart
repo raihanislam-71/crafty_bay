@@ -14,7 +14,7 @@ class HorizontalCategoriesListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
-      itemCount: 10,
+      itemCount: categoryList.length,
       itemBuilder: (context, index) {
         return CategoryCard(categoryModel: categoryList[index],);
       },

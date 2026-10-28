@@ -32,15 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 16),
               SearchTextField(textEditingController: TextEditingController()),
               const SizedBox(height: 16),
-              /*GetBuilder<SliderListController>(
-                builder: (sliderListController) {
-                  return Visibility(
-                    visible: !sliderListController.inProgress,
-                      replacement: const CenteredCircularProgressIndicator(),
-                      child: HomeBannerSlider(sliderList: sliderListController.sliderList,));
-                }
-              ),*/
-              HomeBannerSlider(),
+              const HomeBannerSlider(),
               const SizedBox(height: 16),
               _buildCategoriesSection(),
               _buildPopularProductSection(),
@@ -67,7 +59,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Visibility(
                 visible: !popularProductListController.inProgress,
                 replacement: const CenteredCircularProgressIndicator(),
-                child: HorizontalProductListView(productList: popularProductListController.productList,),
+                child: HorizontalProductListView(
+                  productList: popularProductListController.productList,
+                ),
               );
             },
           ),
@@ -87,7 +81,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Visibility(
                 visible: !newProductListController.inProgress,
                 replacement: const CenteredCircularProgressIndicator(),
-                child: HorizontalProductListView(productList: newProductListController.productList,),
+                child: HorizontalProductListView(
+                  productList: newProductListController.productList,
+                ),
               );
             },
           ),
@@ -107,7 +103,9 @@ class _HomeScreenState extends State<HomeScreen> {
               return Visibility(
                 visible: !specialProductListController.inProgress,
                 replacement: const CenteredCircularProgressIndicator(),
-                child: HorizontalProductListView(productList: specialProductListController.productList,),
+                child: HorizontalProductListView(
+                  productList: specialProductListController.productList,
+                ),
               );
             },
           ),
@@ -126,14 +124,20 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         const SizedBox(height: 8),
-         SizedBox(height: 120, child: GetBuilder<CategoryListController>(
-           builder: (categoryListController) {
-             return Visibility(
-               visible: !categoryListController.inProgress,
-                 replacement: const CenteredCircularProgressIndicator(),
-                 child: HorizontalCategoriesListView(categoryList: categoryListController.categoryList,));
-           }
-         )),
+        SizedBox(
+          height: 120,
+          child: GetBuilder<CategoryListController>(
+            builder: (categoryListController) {
+              return Visibility(
+                visible: !categoryListController.inProgress,
+                replacement: const CenteredCircularProgressIndicator(),
+                child: HorizontalCategoriesListView(
+                  categoryList: categoryListController.categoryList,
+                ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }
@@ -152,5 +156,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-

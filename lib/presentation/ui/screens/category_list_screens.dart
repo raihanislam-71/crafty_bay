@@ -12,47 +12,53 @@ class CategoryListScreens extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvoked: (value){
+      onPopInvoked: (value) {
         backToHome();
       },
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Categories"),
-          leading: IconButton(onPressed: () {
-            backToHome();
-          }, icon: const Icon(Icons.arrow_back_ios)),
+          leading: IconButton(
+            onPressed: () {
+              backToHome();
+            },
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
         ),
-        body: GetBuilder<CategoryListController>(
-          builder: (categoryListController) {
-            if(categoryListController.inProgress){
-              return const CenteredCircularProgressIndicator();
-            }
+        body: RefreshIndicator(
+          onRefresh: () async {
+            Get.find<CategoryListController>().getCategoryList();
+          },
+          child: GetBuilder<CategoryListController>(
+            builder: (categoryListController) {
+              if (categoryListController.inProgress) {
+                return const CenteredCircularProgressIndicator();
+              }
 
-            if (categoryListController.categoryList.isEmpty) {
-              return const Center(child: Text("No categories available."));
-            }
+              if (categoryListController.categoryList.isEmpty) {
+                return const Center(child: Text("No categories available."));
+              }
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                Get.find<CategoryListController>().getCategoryList();
-              },
-              child: GridView.builder(
-                  itemCount: categoryListController.categoryList.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemBuilder: (context, index) {
-                    return CategoryCard(categoryModel: categoryListController.categoryList[index],);
-                  },
+              return GridView.builder(
+                itemCount: categoryListController.categoryList.length,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 0.75,
                 ),
-            );
-          }
+                itemBuilder: (context, index) {
+                  return CategoryCard(
+                    categoryModel: categoryListController.categoryList[index],
+                  );
+                },
+              );
+            },
+          ),
         ),
       ),
     );
   }
-  void backToHome(){
+
+  void backToHome() {
     Get.find<BottomNavBarController>().backToHome();
   }
 }
