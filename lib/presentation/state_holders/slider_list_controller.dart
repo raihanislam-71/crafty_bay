@@ -1,8 +1,8 @@
 import 'package:crafty_bay/data/models/category_list_model.dart';
 import 'package:crafty_bay/data/models/category_model.dart';
 import 'package:crafty_bay/data/models/network_response.dart';
-import 'package:crafty_bay/data/models/slider_banner_list_model.dart';
-import 'package:crafty_bay/data/models/slider_banner_model.dart';
+import 'package:crafty_bay/data/models/slider_list_model.dart';
+import 'package:crafty_bay/data/models/slider_model.dart';
 import 'package:crafty_bay/data/services/network_caller.dart';
 import 'package:crafty_bay/data/utils/urls.dart';
 import 'package:get/get.dart';

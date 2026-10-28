@@ -1,4 +1,4 @@
-import 'package:crafty_bay/data/models/slider_banner_model.dart';
+import 'package:crafty_bay/data/models/slider_model.dart';
 
 class SliderListModel {
   String? msg;
