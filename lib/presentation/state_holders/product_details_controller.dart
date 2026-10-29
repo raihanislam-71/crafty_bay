@@ -25,7 +25,7 @@ class ProductDetailsController extends GetxController {
     );
 
     if (response.isSuccess) {
-      _productModel = ProductDetailsModel.fromJson(response.responseData['data']);
+      _productModel = ProductDetailsModel.fromJson(response.responseData['data'][0]);
       isSuccess = true;
       _errorMessage = null;
     } else {

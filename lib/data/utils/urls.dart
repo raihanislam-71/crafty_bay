@@ -1,6 +1,5 @@
 class Urls {
   //base
-  //static const String _baseUrl = "https://craftybay.teamrabbil.com/api";
   static const String _baseUrl = "https://ecommerce-api.codesilicon.com/api";
 
   //Auth

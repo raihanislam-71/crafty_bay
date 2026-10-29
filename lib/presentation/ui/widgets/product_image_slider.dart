@@ -33,7 +33,7 @@ class _ProductImageSliderState extends State<ProductImageSlider> {
               builder: (BuildContext context) {
                 return Container(
                   decoration: BoxDecoration(
-                    color: Colors.teal.shade200,
+                    color: Colors.teal.shade100,
                     image: DecorationImage(
                       image: NetworkImage(imageUrl),
                     ),
