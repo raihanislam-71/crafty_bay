@@ -19,5 +19,5 @@ class Urls {
   static String productDetailsById(int productId) =>
       "$_baseUrl/ProductDetailsById/$productId";
 
-
+  static String verifyEmail(String email) => '$_baseUrl/UserLogin/$email';
 }
