@@ -1,4 +1,3 @@
-
 import 'package:crafty_bay/data/models/category_model.dart';
 
 class CategoryListModel {

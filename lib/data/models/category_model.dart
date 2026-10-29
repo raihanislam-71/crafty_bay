@@ -1,4 +1,3 @@
-
 class CategoryModel {
   int? id;
   String? categoryName;
