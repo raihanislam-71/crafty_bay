@@ -1,11 +1,18 @@
-
 import 'dart:async';
+import 'package:crafty_bay/data/services/network_caller.dart';
 import 'package:get/get.dart';
+import '../../data/models/network_response.dart';
+import '../../data/utils/urls.dart';
 
 class OtpTimeController extends GetxController{
-  int remainingTime = 120;
-  bool canResend = false;
+  int _remainingTime = 120;
+  bool _canResend = false;
+  bool _inProgress = false;
   Timer? _timer;
+
+  int get remainingTime => _remainingTime;
+  bool get canResend => _canResend;
+  bool get inProgress => _inProgress;
 
   @override
   void onInit(){
@@ -14,32 +21,46 @@ class OtpTimeController extends GetxController{
   }
 
   void startTimer(){
-    remainingTime = 120;
-    canResend = false;
-
     _timer?.cancel();
+    _remainingTime = 120;
+    _canResend = false;
+    update();
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer){
       if (isClosed) {
         timer.cancel();
         return;
       }
       if(remainingTime > 0){
-        remainingTime--;
+        _remainingTime--;
         update();
       }else{
-        canResend = true;
+        _canResend = true;
         _timer?.cancel();
         update();
       }
     });
   }
 
-  void resendCode() {
-    if (canResend) {
+ Future<bool> resendCode(String email) async{
+    if(!canResend) return false;
+
+    _inProgress = true;
+    update();
+
+    final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(url: Urls.verifyEmail(email));
+
+    _inProgress = false;
+    if(response.isSuccess && response.responseData['msg'] == 'success'){
       startTimer();
-      // এখানে API কল করুন
+      return true;
+    }else{
+      _canResend = true;
+      update();
+      return false;
     }
-  }
+
+ }
 
   @override
   void onClose() {

@@ -1,5 +1,6 @@
 import 'package:crafty_bay/presentation/state_holders/email_verification_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/otp_verification_screen.dart';
+import 'package:crafty_bay/presentation/ui/utils/app_constants.dart';
 import 'package:crafty_bay/presentation/ui/utils/snack_message.dart';
 import 'package:crafty_bay/presentation/ui/widgets/app_logo_widget.dart';
 import 'package:crafty_bay/presentation/ui/widgets/centered_circular_progress_indicator.dart';
@@ -53,6 +54,9 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     if (value?.isEmpty ?? true) {
                       return 'Enter your email';
                     }
+                    if(AppConstants.emailRegExp.hasMatch(value!) == false){
+                      return 'Enter a valid email address';
+                    }
                     return null;
                   },
                 ),
@@ -86,7 +90,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       _emailTEController.text.trim(),
     );
     if (result) {
-      Get.to(() => const OtpVerificationScreen());
+      Get.to(() => OtpVerificationScreen(email: _emailTEController.text.trim(),));
     } else {
       if (mounted) {
         showSnackBarMessage(
