@@ -8,6 +8,10 @@ class OtpVerificationController extends GetxController{
 
   String? _errorMassage;
 
+  String _accessToken = '';
+
+  String get accessToken => _accessToken;
+
   bool get inProgress => _inProgress;
 
   String? get errorMassage => _errorMassage;
@@ -20,6 +24,7 @@ class OtpVerificationController extends GetxController{
     final NetworkResponse response = await Get.find<NetworkCaller>().getRequest(url: Urls.verifyOtp(email,otp));
 
     if(response.isSuccess && response.responseData['msg'] == 'success'){
+      _accessToken = response.responseData['data'];
       _errorMassage = null;
       isSuccess = true;
     }else{
