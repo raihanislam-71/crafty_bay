@@ -261,7 +261,6 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         _selectedSize,
         quantity,
       );
-
       if (result) {
         if (mounted) {
           showSnackBarMessage(context, 'Added to cart');
