@@ -19,9 +19,10 @@ class MainBottomNavScreen extends StatefulWidget {
 }
 
 class _MainBottomNavScreenState extends State<MainBottomNavScreen> {
-final BottomNavBarController _navBarController = Get.find<BottomNavBarController>();
+  final BottomNavBarController _navBarController =
+      Get.find<BottomNavBarController>();
 
-  final List<Widget> _screens = const[
+  final List<Widget> _screens = const [
     HomeScreen(),
     CategoryListScreens(),
     CartScreen(),
@@ -31,11 +32,13 @@ final BottomNavBarController _navBarController = Get.find<BottomNavBarController
   @override
   void initState() {
     super.initState();
-    Get.find<SliderListController>().getSliderList();
-    Get.find<CategoryListController>().getCategoryList();
-    Get.find<NewProductListController>().getNewProductList();
-    Get.find<PopularProductListController>().getPopularProductList();
-    Get.find<SpecialProductListController>().getSpecialProductList();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<SliderListController>().getSliderList();
+      Get.find<CategoryListController>().getCategoryList();
+      Get.find<NewProductListController>().getNewProductList();
+      Get.find<PopularProductListController>().getPopularProductList();
+      Get.find<SpecialProductListController>().getSpecialProductList();
+    });
   }
 
   @override
@@ -53,7 +56,10 @@ final BottomNavBarController _navBarController = Get.find<BottomNavBarController
                 icon: Icon(Icons.category_outlined),
                 label: 'Category',
               ),
-              NavigationDestination(icon: Icon(Icons.shopping_cart), label: 'Cart'),
+              NavigationDestination(
+                icon: Icon(Icons.shopping_cart),
+                label: 'Cart',
+              ),
               NavigationDestination(
                 icon: Icon(Icons.favorite_border),
                 label: 'Wishlist',
@@ -61,7 +67,7 @@ final BottomNavBarController _navBarController = Get.find<BottomNavBarController
             ],
           ),
         );
-      }
+      },
     );
   }
 }
