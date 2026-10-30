@@ -60,6 +60,7 @@ class NetworkCaller {
   Future<NetworkResponse> postRequest({
     required String url,
     Map<String, dynamic>? body,
+    String? token,
   }) async {
     try {
       Uri uri = Uri.parse(url);
@@ -67,7 +68,10 @@ class NetworkCaller {
       final http.Response response = await http.post(
         uri,
         body: jsonEncode(body),
-        headers: {'token': '${AuthController.accessToken}', 'Content-Type': 'application/json'},
+        headers: {
+          'token': '${token ?? AuthController.accessToken}',
+          'Content-Type': 'application/json',
+        },
       );
 
       if (response.statusCode == 200) {

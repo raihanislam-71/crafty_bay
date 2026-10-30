@@ -10,6 +10,7 @@ class Urls {
   static const String categoryList = "$_baseUrl/CategoryList";
   static const String readProfile = "$_baseUrl/ReadProfile";
   static const String addToCart = "$_baseUrl/CreateCartList";
+  static const String createProfile = "$_baseUrl/CreateProfile";
 
   // dynamic remarks: popular, new, special
   static String productListByRemark(String remark) =>
