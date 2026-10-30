@@ -35,7 +35,7 @@ class _SizePickerState extends State<SizePicker> {
                 setState(() {});
               },
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
                   border: Border.all(),
                   color: _selectedSize == item ? AppColors.themeColor : null,

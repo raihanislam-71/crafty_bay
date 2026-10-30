@@ -1,6 +1,4 @@
 import 'package:crafty_bay/data/models/network_response.dart';
-import 'package:crafty_bay/data/models/product_list_model.dart';
-import 'package:crafty_bay/data/models/product_model.dart';
 import 'package:crafty_bay/data/services/network_caller.dart';
 import 'package:crafty_bay/data/utils/urls.dart';
 import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
