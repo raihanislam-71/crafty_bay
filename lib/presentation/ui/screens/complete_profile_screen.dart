@@ -1,5 +1,11 @@
+import 'package:crafty_bay/data/models/create_profile_model.dart';
+import 'package:crafty_bay/presentation/state_holders/create_profile_controller.dart';
+import 'package:crafty_bay/presentation/ui/screens/main_bottom_nav_screen.dart';
+import 'package:crafty_bay/presentation/ui/utils/snack_message.dart';
 import 'package:crafty_bay/presentation/ui/widgets/app_logo_widget.dart';
+import 'package:crafty_bay/presentation/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   const CompleteProfileScreen({super.key});
@@ -202,15 +208,17 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                   validator: _phoneValidator,
                 ),
                 const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    if (!_formKey.currentState!.validate()) {
-                      return;
-                    }
-
-                    // TODO: Handle form submission
+                GetBuilder<CreateProfileController>(
+                  builder: (createProfileController) {
+                    return Visibility(
+                      visible: !createProfileController.inProgress,
+                      replacement: const CenteredCircularProgressIndicator(),
+                      child: ElevatedButton(
+                        onPressed: _onTapCompleteButton,
+                        child: const Text('Complete'),
+                      ),
+                    );
                   },
-                  child: const Text('Complete'),
                 ),
               ],
             ),
@@ -259,6 +267,47 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
       return 'Enter a valid phone number';
     }
     return null;
+  }
+
+  Future<void> _onTapCompleteButton() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    final CreateProfileModel model = CreateProfileModel(
+      cusName: _cusNameTEController.text.trim(),
+      cusAdd: _cusAddTEController.text.trim(),
+      cusCity: _cusCityTEController.text.trim(),
+      cusState: _cusStateTEController.text.trim(),
+      cusPostcode: _cusPostcodeTEController.text.trim(),
+      cusCountry: _cusCountryTEController.text.trim(),
+      cusPhone: _cusPhoneTEController.text.trim(),
+      cusFax: _cusFaxTEController.text.trim(),
+      shipName: _shipNameTEController.text.trim(),
+      shipAdd: _shipAddTEController.text.trim(),
+      shipCity: _shipCityTEController.text.trim(),
+      shipState: _shipStateTEController.text.trim(),
+      shipPostcode: _shipPostcodeTEController.text.trim(),
+      shipCountry: _shipCountryTEController.text.trim(),
+      shipPhone: _shipPhoneTEController.text.trim(),
+    );
+
+    final bool isSuccess = await Get.find<CreateProfileController>()
+        .createProfile(model);
+    if (!mounted) {
+      return;
+    }
+
+    if (isSuccess) {
+      Get.offAll(() => const MainBottomNavScreen());
+    } else {
+      showSnackBarMessage(
+        context,
+        Get.find<CreateProfileController>().errorMassage ??
+            'Could not create profile. Please try again.',
+        true,
+      );
+    }
   }
 
   @override
