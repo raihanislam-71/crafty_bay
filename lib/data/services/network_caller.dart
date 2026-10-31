@@ -1,15 +1,21 @@
 import 'dart:convert';
 import 'package:crafty_bay/data/models/network_response.dart';
 import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
+import 'package:crafty_bay/presentation/ui/screens/email_verification_screen.dart';
+import 'package:get/route_manager.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class NetworkCaller {
   final Logger logger;
+  final AuthController authController;
 
-  NetworkCaller({required this.logger});
+  NetworkCaller({required this.logger, required this.authController});
 
-  Future<NetworkResponse> getRequest({required String url,String? token}) async {
+  Future<NetworkResponse> getRequest({
+    required String url,
+    String? token,
+  }) async {
     try {
       Uri uri = Uri.parse(url);
       _requestLog(url, {}, {}, '');
@@ -40,7 +46,9 @@ class NetworkCaller {
           response.headers,
           false,
         );
-
+        if (response.statusCode == 401) {
+          _moveToLogin();
+        }
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
@@ -97,6 +105,9 @@ class NetworkCaller {
           response.headers,
           false,
         );
+        if (response.statusCode == 401) {
+          _moveToLogin();
+        }
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
@@ -110,6 +121,11 @@ class NetworkCaller {
         errorMassage: e.toString(),
       );
     }
+  }
+
+  Future<void> _moveToLogin() async {
+    await authController.clearUserData();
+    Get.to(() => const EmailVerificationScreen());
   }
 
   void _requestLog(

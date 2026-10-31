@@ -17,12 +17,18 @@ import 'package:crafty_bay/presentation/widgets/otp_time_controller.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
-class ControllerBinder  extends Bindings{
+class ControllerBinder extends Bindings {
   @override
   void dependencies() {
     Get.put(BottomNavBarController());
     Get.put(Logger());
-    Get.put(NetworkCaller(logger: Get.find<Logger>()));
+    Get.put(AuthController());
+    Get.put(
+      NetworkCaller(
+        logger: Get.find<Logger>(),
+        authController: Get.find<AuthController>(),
+      ),
+    );
     Get.put(SliderListController());
     Get.put(CategoryListController());
     Get.put(NewProductListController());
@@ -30,12 +36,11 @@ class ControllerBinder  extends Bindings{
     Get.put(SpecialProductListController());
     Get.put(ProductListByCategoryController());
     Get.put(ProductDetailsController());
-    Get.put(AuthController());
     Get.put(EmailVerificationController());
     Get.put(OtpVerificationController());
     Get.put(OtpTimeController());
     Get.put(AddToCartController());
     Get.put(CreateProfileController());
-    Get.lazyPut(()=> ReadProfileController());
+    Get.lazyPut(() => ReadProfileController());
   }
 }
