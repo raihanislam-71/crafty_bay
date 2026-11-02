@@ -99,6 +99,7 @@ class _PaymentDetailsScreenState extends State<PaymentDetailsScreen> {
 
   Widget _buildPaySummaryRow({required String title, required String amount}) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(title),
         Text('\$$amount', style: const TextStyle(fontWeight: FontWeight.w600)),
