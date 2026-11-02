@@ -11,6 +11,7 @@ class Urls {
   static const String readProfile = "$_baseUrl/ReadProfile";
   static const String addToCart = "$_baseUrl/CreateCartList";
   static const String createProfile = "$_baseUrl/CreateProfile";
+  static const String createInvoice = "$_baseUrl/InvoiceCreate";
 
   // dynamic remarks: popular, new, special
   static String productListByRemark(String remark) =>
