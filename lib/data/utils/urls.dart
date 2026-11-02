@@ -12,6 +12,10 @@ class Urls {
   static const String addToCart = "$_baseUrl/CreateCartList";
   static const String createProfile = "$_baseUrl/CreateProfile";
   static const String createInvoice = "$_baseUrl/InvoiceCreate";
+  static const String cartList = "$_baseUrl/CartList";
+
+  static String deleteCartItem(int cartItemId) =>
+      "$_baseUrl/DeleteCartList/$cartItemId";
 
   // dynamic remarks: popular, new, special
   static String productListByRemark(String remark) =>
@@ -25,5 +29,6 @@ class Urls {
 
   static String verifyEmail(String email) => '$_baseUrl/UserLogin/$email';
 
-  static String verifyOtp(String email,String otp) => '$_baseUrl/VerifyLogin/$email/$otp';
+  static String verifyOtp(String email, String otp) =>
+      '$_baseUrl/VerifyLogin/$email/$otp';
 }

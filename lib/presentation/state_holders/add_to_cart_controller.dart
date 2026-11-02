@@ -1,6 +1,7 @@
 import 'package:crafty_bay/data/models/network_response.dart';
 import 'package:crafty_bay/data/services/network_caller.dart';
 import 'package:crafty_bay/data/utils/urls.dart';
+import 'package:crafty_bay/presentation/state_holders/cart_list_controller.dart';
 import 'package:get/get.dart';
 
 class AddToCartController extends GetxController {
@@ -36,8 +37,15 @@ class AddToCartController extends GetxController {
     if (response.isSuccess && response.responseData['msg'] == 'success') {
       _errorMassage = null;
       isSuccess = true;
+      if (Get.isRegistered<CartListController>()) {
+        await Get.find<CartListController>().getCartList();
+      }
     } else {
-      _errorMassage = response.errorMassage;
+      _errorMassage = response.errorMassage ??
+          (response.responseData is Map<String, dynamic>
+              ? response.responseData['msg']?.toString()
+              : null) ??
+          'Failed to add to cart';
     }
     _inProgress = false;
     update();

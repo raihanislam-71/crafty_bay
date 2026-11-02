@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:item_count_number_button/item_count_number_button.dart';
+import 'package:crafty_bay/data/models/cart_item_model.dart';
 
 import '../../utils/app_colors.dart';
-import '../../utils/assets_path.dart';
 
 class CartItemWidget extends StatelessWidget {
-  const CartItemWidget({super.key});
+  const CartItemWidget({
+    super.key,
+    required this.item,
+    required this.onQuantityChanged,
+    required this.onRemove,
+    this.isDeleting = false,
+  });
+
+  final CartItemModel item;
+  final ValueChanged<int> onQuantityChanged;
+  final VoidCallback onRemove;
+  final bool isDeleting;
 
   @override
   Widget build(BuildContext context) {
@@ -26,14 +36,25 @@ class CartItemWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("title od product", style: textTheme.bodyLarge),
+                          Text(
+                            item.product?.title ?? 'Product',
+                            style: textTheme.bodyLarge,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                           _buildColorAndSize(textTheme),
                         ],
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.delete, color: Colors.grey),
+                      onPressed: isDeleting ? null : onRemove,
+                      icon: isDeleting
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.delete, color: Colors.grey),
                     ),
                   ],
                 ),
@@ -51,48 +72,79 @@ class CartItemWidget extends StatelessWidget {
       spacing: 8,
       children: [
         Text(
-          "Color: Red",
+          "Color: ${item.color ?? 'N/A'}",
           style: textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
         Text(
-          "Size: XL",
+          "Size: ${item.size ?? 'N/A'}",
           style: textTheme.bodySmall?.copyWith(color: Colors.grey),
         ),
       ],
     );
   }
-
 
   Widget _buildPriceAndCounter(TextTheme textTheme) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          "\$100",
-          style: textTheme.titleMedium?.copyWith(color: AppColors.themeColor),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Unit: ${_formatPrice(item.unitPrice)}',
+              style: textTheme.bodySmall,
+            ),
+            Text(
+              'Total: ${_formatPrice(item.totalPrice)}',
+              style: textTheme.titleSmall?.copyWith(
+                color: AppColors.themeColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
         ),
-        ItemCount(
-          initialValue: 1,
-          minValue: 0,
-          maxValue: 20,
-          decimalPlaces: 0,
-          color: AppColors.themeColor,
-          onChanged: (value) {},
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: item.quantity > 1
+                  ? () => onQuantityChanged(item.quantity - 1)
+                  : null,
+              icon: const Icon(Icons.remove_circle_outline),
+              color: AppColors.themeColor,
+            ),
+            Text('${item.quantity}', style: textTheme.titleSmall),
+            IconButton(
+              onPressed: () => onQuantityChanged(item.quantity + 1),
+              icon: const Icon(Icons.add_circle_outline),
+              color: AppColors.themeColor,
+            ),
+          ],
         ),
       ],
     );
   }
 
-
   Widget _buildProductImage() {
+    final String? imageUrl = item.product?.image;
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Image.asset(
-        AssetsPath.dummyProductImg,
+      child: SizedBox(
         width: 80,
         height: 80,
-        fit: BoxFit.scaleDown,
+        child: (imageUrl == null || imageUrl.isEmpty)
+            ? const Icon(Icons.image_not_supported_outlined, size: 40)
+            : Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+                errorBuilder: (_, _, _) =>
+                    const Icon(Icons.image_not_supported_outlined, size: 40),
+              ),
       ),
     );
   }
+
+  String _formatPrice(num price) =>
+      '\$${price % 1 == 0 ? price.toStringAsFixed(0) : price.toStringAsFixed(2)}';
 }

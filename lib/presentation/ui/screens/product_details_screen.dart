@@ -68,11 +68,23 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildProductDetails(ProductDetailsModel product) {
-    List<String> colors = product.color!.split(',');
-    List<String> sizes = product.size!.split(',');
+    List<String> colors = (product.color ?? '')
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+    List<String> sizes = (product.size ?? '')
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
 
-    _selectedColor = colors.first;
-    _selectedSize = sizes.first;
+    if (_selectedColor.isEmpty && colors.isNotEmpty) {
+      _selectedColor = colors.first;
+    }
+    if (_selectedSize.isEmpty && sizes.isNotEmpty) {
+      _selectedSize = sizes.first;
+    }
 
     return SingleChildScrollView(
       child: Column(
@@ -94,24 +106,19 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                 const SizedBox(height: 12),
                 _buildRatingAndReviewSection(product),
                 const SizedBox(height: 8),
-                /*ColorPicker(
-                  colors: const [
-                    Colors.red,
-                    Colors.green,
-                    Colors.yellow,
-                    Colors.black,
-                  ],
-                  onColorSelected: (color) {},
-                ),*/
                 SizePicker(
+                  title: 'Color',
                   sizes: colors,
+                  initialSelected: _selectedColor,
                   onSizeSelected: (String selectedColor) {
                     _selectedColor = selectedColor;
                   },
                 ),
                 const SizedBox(height: 16),
                 SizePicker(
+                  title: 'Size',
                   sizes: sizes,
+                  initialSelected: _selectedSize,
                   onSizeSelected: (String selectedSize) {
                     _selectedSize = selectedSize;
                   },
@@ -152,7 +159,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         ItemCount(
           initialValue: quantity,
-          minValue: 0,
+          minValue: 1,
           maxValue: 20,
           decimalPlaces: 0,
           color: AppColors.themeColor,
@@ -277,7 +284,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         if (mounted) {
           showSnackBarMessage(
             context,
-            Get.find<AddToCartController>().errorMassage!,
+            Get.find<AddToCartController>().errorMassage ??
+                'Failed to add to cart',
             true,
           );
         }

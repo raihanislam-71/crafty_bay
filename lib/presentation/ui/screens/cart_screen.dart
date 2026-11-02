@@ -1,9 +1,15 @@
+import 'package:crafty_bay/data/models/cart_item_model.dart';
+import 'package:crafty_bay/presentation/state_holders/cart_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/delete_cart_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/payment_details_screen.dart';
+import 'package:crafty_bay/presentation/ui/utils/snack_message.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../state_holders/bottom_nav_bar_controller.dart';
 import '../utils/app_colors.dart';
 import '../widgets/cart/cart_item_widget.dart';
+import '../widgets/centered_circular_progress_indicator.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -13,6 +19,14 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<CartListController>().getCartList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -29,24 +43,73 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
         backgroundColor: Colors.grey.shade100,
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                itemBuilder: (context, index) {
-                  return const CartItemWidget();
-                },
-              ),
-            ),
-            _buildPriceAndAddToCartSection(),
-          ],
+        body: GetBuilder<CartListController>(
+          builder: (cartListController) {
+            return Column(
+              children: [
+                Expanded(
+                  child: Visibility(
+                    visible: !cartListController.inProgress,
+                    replacement: const CenteredCircularProgressIndicator(),
+                    child: _buildCartList(cartListController),
+                  ),
+                ),
+                _buildPriceAndAddToCartSection(cartListController),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildPriceAndAddToCartSection() {
+  Widget _buildCartList(CartListController controller) {
+    if (controller.errorMessage != null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(controller.errorMessage!),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: controller.getCartList,
+              child: const Text('Try again'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (controller.cartList.isEmpty) {
+      return const Center(child: Text('Your cart is empty'));
+    }
+
+    return RefreshIndicator(
+      onRefresh: controller.getCartList,
+      child: ListView.builder(
+        itemCount: controller.cartList.length,
+        itemBuilder: (context, index) {
+          final item = controller.cartList[index];
+          return GetBuilder<DeleteCartController>(
+            builder: (deleteCartController) {
+              return CartItemWidget(
+                key: ValueKey(item.id),
+                item: item,
+                onQuantityChanged: (quantity) {
+                  controller.updateQuantity(item, quantity);
+                },
+                isDeleting: deleteCartController.isDeleting(item.id),
+                onRemove: () =>
+                    _onRemoveCartItem(deleteCartController, controller, item),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPriceAndAddToCartSection(CartListController controller) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -59,13 +122,13 @@ class _CartScreenState extends State<CartScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Total Prices'),
+              const Text('Total Prices'),
               Text(
-                '\$100000',
-                style: TextStyle(
+                _formatPrice(controller.totalPrice),
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: AppColors.themeColor,
@@ -89,7 +152,40 @@ class _CartScreenState extends State<CartScreen> {
     Get.to(() => const PaymentDetailsScreen());
   }
 
+  Future<void> _onRemoveCartItem(
+    DeleteCartController deleteCartController,
+    CartListController controller,
+    CartItemModel item,
+  ) async {
+    final int? itemId = item.id;
+    if (itemId == null) return;
+
+    final bool isDeleted = await deleteCartController.deleteCartItem(
+      itemId,
+      productId: item.productId ?? item.product?.id,
+    );
+    if (isDeleted) {
+      controller.removeItem(itemId);
+      await controller.getCartList();
+      if (mounted) {
+        showSnackBarMessage(context, 'Item removed from cart');
+      }
+      return;
+    }
+
+    if (!isDeleted && mounted) {
+      showSnackBarMessage(
+        context,
+        deleteCartController.errorMessage ?? 'Delete failed',
+        true,
+      );
+    }
+  }
+
   void backToHome() {
     Get.find<BottomNavBarController>().backToHome();
   }
+
+  String _formatPrice(num price) =>
+      '\$${price % 1 == 0 ? price.toStringAsFixed(0) : price.toStringAsFixed(2)}';
 }

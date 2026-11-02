@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:crafty_bay/data/models/network_response.dart';
 import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/email_verification_screen.dart';
@@ -49,9 +50,17 @@ class NetworkCaller {
         if (response.statusCode == 401) {
           _moveToLogin();
         }
+        dynamic decodedBody;
+        try {
+          decodedBody = jsonDecode(response.body);
+        } catch (_) {}
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          responseData: decodedBody,
+          errorMassage: decodedBody is Map<String, dynamic>
+              ? decodedBody['msg']?.toString()
+              : null,
         );
       }
     } catch (e) {
@@ -108,11 +117,78 @@ class NetworkCaller {
         if (response.statusCode == 401) {
           _moveToLogin();
         }
+        dynamic decodedBody;
+        try {
+          decodedBody = jsonDecode(response.body);
+        } catch (_) {}
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
+          responseData: decodedBody,
+          errorMassage: decodedBody is Map<String, dynamic>
+              ? decodedBody['msg']?.toString()
+              : null,
         );
       }
+    } catch (e) {
+      _responseLog(url, -1, null, {}, false, e);
+      return NetworkResponse(
+        isSuccess: false,
+        statusCode: -1,
+        errorMassage: e.toString(),
+      );
+    }
+  }
+
+  Future<NetworkResponse> deleteRequest({
+    required String url,
+    String? token,
+  }) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      _requestLog(url, {}, {}, '');
+      final http.Response response = await http.delete(
+        uri,
+        headers: {'token': '${token ?? AuthController.accessToken}'},
+      );
+
+      if (response.statusCode == 200) {
+        _responseLog(
+          url,
+          response.statusCode,
+          response.body,
+          response.headers,
+          true,
+        );
+        return NetworkResponse(
+          isSuccess: true,
+          statusCode: response.statusCode,
+          responseData: jsonDecode(response.body),
+        );
+      }
+
+      _responseLog(
+        url,
+        response.statusCode,
+        response.body,
+        response.headers,
+        false,
+      );
+      if (response.statusCode == 401) {
+        _moveToLogin();
+      }
+      dynamic decodedBody;
+      try {
+        decodedBody = jsonDecode(response.body);
+      } catch (_) {}
+      return NetworkResponse(
+        isSuccess: false,
+        statusCode: response.statusCode,
+        responseData: decodedBody,
+        errorMassage: decodedBody is Map<String, dynamic>
+            ? decodedBody['msg']?.toString()
+            : null,
+      );
     } catch (e) {
       _responseLog(url, -1, null, {}, false, e);
       return NetworkResponse(
