@@ -5,7 +5,7 @@ class CartItemModel {
   int? productId;
   String? color;
   String? size;
-  int quantity;
+  int quantity = 1;
   num? price;
   CartProductModel? product;
 
@@ -19,19 +19,17 @@ class CartItemModel {
     this.product,
   });
 
-  CartItemModel.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        productId = json['product_id'] ??
-            (json['product'] is Map<String, dynamic>
-                ? json['product']['id']
-                : null),
-        color = json['color'],
-        size = json['size'],
-        quantity = int.tryParse(json['qty']?.toString() ?? '') ?? 1,
-        price = num.tryParse(json['price']?.toString() ?? ''),
-        product = json['product'] is Map<String, dynamic>
-            ? CartProductModel.fromJson(json['product'])
-            : null;
+  CartItemModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    productId = json['product_id'];
+    color = json['color'];
+    size = json['size'];
+    quantity = int.tryParse(json['qty']?.toString() ?? '1') ?? 1;
+    price = num.tryParse(json['price']?.toString() ?? '0');
+    product = json['product'] != null
+        ? CartProductModel.fromJson(json['product'])
+        : null;
+  }
 
   num get unitPrice => product?.price ?? price ?? 0;
 

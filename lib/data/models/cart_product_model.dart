@@ -9,7 +9,7 @@ class CartProductModel {
   CartProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    price = num.tryParse(json['price']?.toString() ?? '');
+    price = num.tryParse(json['price']?.toString() ?? '0');
     image = json['image'];
   }
 }

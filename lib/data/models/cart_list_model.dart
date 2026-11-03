@@ -2,18 +2,17 @@ import 'package:crafty_bay/data/models/cart_item_model.dart';
 
 class CartListModel {
   String? msg;
-  List<CartItemModel> cartList = [];
+  List<CartItemModel>? cartList;
 
-  CartListModel({this.msg, this.cartList = const []});
+  CartListModel({this.msg, this.cartList});
 
   CartListModel.fromJson(Map<String, dynamic> json) {
     msg = json['msg'];
-    final dynamic data = json['data'];
-    if (data is List) {
-      cartList = data
-          .whereType<Map<String, dynamic>>()
-          .map(CartItemModel.fromJson)
-          .toList();
+    if (json['data'] != null) {
+      cartList = <CartItemModel>[];
+      json['data'].forEach((v) {
+        cartList!.add(CartItemModel.fromJson(v));
+      });
     }
   }
 }

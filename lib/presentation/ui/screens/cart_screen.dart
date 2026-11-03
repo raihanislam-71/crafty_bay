@@ -96,7 +96,7 @@ class _CartScreenState extends State<CartScreen> {
                 key: ValueKey(item.id),
                 item: item,
                 onQuantityChanged: (quantity) {
-                  controller.updateQuantity(item, quantity);
+                  controller.updateQuantity(item.id!, quantity);
                 },
                 isDeleting: deleteCartController.isDeleting(item.id),
                 onRemove: () =>

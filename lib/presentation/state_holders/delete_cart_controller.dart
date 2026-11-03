@@ -21,12 +21,12 @@ class DeleteCartController extends GetxController {
 
     final NetworkCaller networkCaller = Get.find<NetworkCaller>();
 
-    // 1. Backend route in Laravel is Route::get('/DeleteCartList/{id}')
+    // 1. Try GET request (Laravel standard for this project)
     NetworkResponse response = await networkCaller.getRequest(
       url: Urls.deleteCartItem(cartItemId),
     );
 
-    // 2. If status is 405 (Method Not Allowed), fallback to DELETE request
+    // 2. If 405 Method Not Allowed, fallback to DELETE request
     if (response.statusCode == 405) {
       response = await networkCaller.deleteRequest(
         url: Urls.deleteCartItem(cartItemId),
@@ -37,7 +37,7 @@ class DeleteCartController extends GetxController {
         response.responseData is Map<String, dynamic> &&
         response.responseData['msg'] == 'success';
 
-    // 3. If 0 rows were affected and productId is different, try with productId
+    // 3. Alternative check with productId if needed
     final dynamic data = response.responseData is Map<String, dynamic>
         ? response.responseData['data']
         : null;
