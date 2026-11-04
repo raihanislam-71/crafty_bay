@@ -1,7 +1,10 @@
 import 'package:crafty_bay/data/models/product_details_model.dart';
 import 'package:crafty_bay/presentation/state_holders/add_to_cart_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/auth_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/create_wish_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/product_details_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/remove_wish_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/wish_list_controller.dart';
 import 'package:crafty_bay/presentation/ui/screens/email_verification_screen.dart';
 import 'package:crafty_bay/presentation/ui/screens/reviews_screen.dart';
 import 'package:crafty_bay/presentation/ui/utils/app_colors.dart';
@@ -28,11 +31,21 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   String _selectedColor = '';
   String _selectedSize = '';
   int quantity = 1;
+  bool isWishlisted = false;
 
   @override
   void initState() {
     super.initState();
     Get.find<ProductDetailsController>().getProductDetails(widget.productId);
+    _checkWishlistStatus();
+  }
+
+  void _checkWishlistStatus() {
+    final wishListController = Get.find<WishListController>();
+    isWishlisted = wishListController.wishListModel.wishList?.any(
+          (element) => element.productId == widget.productId,
+        ) ??
+        false;
   }
 
   @override
@@ -203,20 +216,71 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           ),
         ),
         const SizedBox(width: 8),
-        Card(
-          color: AppColors.themeColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-          child: const Padding(
-            padding: EdgeInsets.all(4.0),
-            child: Icon(
-              Icons.favorite_outline_rounded,
-              size: 16,
-              color: Colors.white,
+        InkWell(
+          onTap: _onTapWishlistButton,
+          child: Card(
+            color: AppColors.themeColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Icon(
+                isWishlisted ? Icons.favorite : Icons.favorite_outline_rounded,
+                size: 16,
+                color: Colors.white,
+              ),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Future<void> _onTapWishlistButton() async {
+    bool isLoggedInUser = Get.find<AuthController>().isLoggedInUser();
+    if (!isLoggedInUser) {
+      Get.to(() => const EmailVerificationScreen());
+      return;
+    }
+
+    if (isWishlisted) {
+      final removeController = Get.find<RemoveWishListController>();
+      final bool success = await removeController.removeWishList(widget.productId);
+      if (success) {
+        isWishlisted = false;
+        setState(() {});
+        await Get.find<WishListController>().getWishList();
+        if (mounted) {
+          showSnackBarMessage(context, 'Removed from wishlist',true);
+        }
+      } else {
+        if (mounted) {
+          showSnackBarMessage(
+            context,
+            removeController.errorMessage ?? 'Failed to remove from wishlist',
+            true,
+          );
+        }
+      }
+    } else {
+      final createController = Get.find<CreateWishListController>();
+      final bool success = await createController.createWishList(widget.productId);
+      if (success) {
+        isWishlisted = true;
+        setState(() {});
+        await Get.find<WishListController>().getWishList();
+        if (mounted) {
+          showSnackBarMessage(context, 'Added to wishlist');
+        }
+      } else {
+        if (mounted) {
+          showSnackBarMessage(
+            context,
+            createController.errorMessage ?? 'Failed to add to wishlist',
+            true,
+          );
+        }
+      }
+    }
   }
 
   Widget _buildPriceAndAddToCartSection(ProductDetailsModel productDetails) {
