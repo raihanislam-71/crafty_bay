@@ -11,7 +11,7 @@ class ReviewListModel {
     if (json['data'] != null) {
       reviewList = <ReviewModel>[];
       json['data'].forEach((v) {
-        reviewList!.add(new ReviewModel.fromJson(v));
+        reviewList!.add(ReviewModel.fromJson(v));
       });
     }
   }
@@ -31,9 +31,9 @@ class Profile {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['cus_name'] = this.cusName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['cus_name'] = cusName;
     return data;
   }
 }

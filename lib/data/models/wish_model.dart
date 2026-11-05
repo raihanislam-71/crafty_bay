@@ -23,6 +23,6 @@ class WishModel {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     product =
-        json['product'] != null ? new ProductWishListModel.fromJson(json['product']) : null;
+        json['product'] != null ?  ProductWishListModel.fromJson(json['product']) : null;
   }
 }

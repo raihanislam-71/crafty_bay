@@ -4,9 +4,6 @@ import 'package:crafty_bay/presentation/ui/screens/payment_gateway_webview.dart'
 import 'package:crafty_bay/presentation/ui/widgets/centered_circular_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/get_instance.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 
 class PaymentDetailsScreen extends StatefulWidget {
   const new({super.key});

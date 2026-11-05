@@ -11,7 +11,7 @@ class WishListModel {
     if (json['data'] != null) {
       wishList = <WishModel>[];
       json['data'].forEach((v) {
-        wishList!.add(new WishModel.fromJson(v));
+        wishList!.add(WishModel.fromJson(v));
       });
     }
   }
