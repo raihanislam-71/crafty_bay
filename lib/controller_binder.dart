@@ -18,6 +18,8 @@ import 'package:crafty_bay/presentation/state_holders/read_profile_controller.da
 import 'package:crafty_bay/presentation/state_holders/remove_wish_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/slider_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/special_product_list_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/create_review_controller.dart';
+import 'package:crafty_bay/presentation/state_holders/review_list_controller.dart';
 import 'package:crafty_bay/presentation/state_holders/wish_list_controller.dart';
 import 'package:crafty_bay/presentation/widgets/otp_time_controller.dart';
 import 'package:get/get.dart';
