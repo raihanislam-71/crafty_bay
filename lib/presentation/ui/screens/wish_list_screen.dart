@@ -84,10 +84,10 @@ class _WishListScreenState extends State<WishListScreen> {
         child: GridView.builder(
           itemCount: wishList.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 0.75, // Standard ProductCard aspect ratio
-            mainAxisSpacing: 8,
-            crossAxisSpacing: 8,
+            crossAxisCount: 2,
+            childAspectRatio: 0.8,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
           ),
           itemBuilder: (context, index) {
             final wishItem = wishList[index];

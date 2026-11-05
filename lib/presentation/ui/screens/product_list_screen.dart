@@ -48,18 +48,16 @@ class _ProductListScreenState extends State<ProductListScreen> {
             }
 
             return GridView.builder(
-              itemCount: 20,
+              itemCount: productListByCategoryController.productList.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: 1,
-                mainAxisSpacing: 4,
-                crossAxisSpacing: 4,
+                childAspectRatio: 0.7,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 8,
               ),
               itemBuilder: (context, index) {
-                return FittedBox(
-                  child: ProductCard(
-                    product: productListByCategoryController.productList[index],
-                  ),
+                return ProductCard(
+                  product: productListByCategoryController.productList[index],
                 );
               },
             );
